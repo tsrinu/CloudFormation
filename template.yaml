@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Register User API with Lambda + API Gateway
+
+Resources:
+
+  RegisterUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: RegisterUserFunction
+      Handler: app.lambda_handler
+      Runtime: python3.13
+      CodeUri: lambda/
+      MemorySize: 128
+      Timeout: 5
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        RegisterAPI:
+          Type: HttpApi
+          Properties:
+            Path: /register
+            Method: POST
+
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${RegisterAPI}.execute-api.${AWS::Region}.amazonaws.com/register"
